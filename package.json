@@ -148,8 +148,8 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "cosmetrics.",
+    "appId": "dev.gustin.cosmetrics",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
