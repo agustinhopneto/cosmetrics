@@ -17,4 +17,12 @@ export const getApiRoutes = async () => {
 
 export namespace Routes {
   export const Hello = '/';
+
+  export enum Providers {
+    Create = '/providers/create',
+    List = '/providers/list',
+    Show = '/providers/show',
+    Upate = '/providers/update',
+    Delete = '/providers/delete',
+  }
 }

@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { sayHello } from 'main/services/hello';
+import { sayHello } from '../services/hello';
 import { Routes } from '../router';
 
 const hello = () => {

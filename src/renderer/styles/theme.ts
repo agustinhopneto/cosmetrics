@@ -8,14 +8,14 @@ export const theme: MantineThemeOverride = {
     Title: {
       styles: {
         root: {
-          color: '#25262B',
+          color: '#373A40',
         },
       },
     },
     Text: {
       styles: {
         root: {
-          color: '#2C2E33',
+          color: '#5C5F66',
         },
       },
     },
