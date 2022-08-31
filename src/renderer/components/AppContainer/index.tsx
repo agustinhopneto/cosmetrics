@@ -7,7 +7,11 @@ type AppContainerProps = AppShellProps;
 export function AppContainer({ children }: AppContainerProps) {
   const { classes } = useStyles();
   return (
-    <AppShell navbar={<AppNavbar />} className={classes.appContainer}>
+    <AppShell
+      padding="lg"
+      navbar={<AppNavbar />}
+      className={classes.appContainer}
+    >
       {children}
     </AppShell>
   );

@@ -9,6 +9,8 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'compat/compat': 'off',
     '@typescript-eslint/no-namespace': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/require-default-props': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

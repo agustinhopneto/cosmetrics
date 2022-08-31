@@ -22,10 +22,10 @@ export function AppNavlink({ route, active, onClick }: AppNavlinkProps) {
       onClick={onClick}
       icon={
         <ThemeIcon
-          sx={{
-            background: 'transparent',
-            color: '#ffffff',
-          }}
+          variant="filled"
+          sx={() => ({
+            color: '#fff',
+          })}
         >
           {route.icon}
         </ThemeIcon>
