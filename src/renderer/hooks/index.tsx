@@ -1,3 +1,4 @@
+import { NotificationsProvider } from './notifications';
 import { ProvidersProvider } from './providers';
 
 type AppProviderProps = {
@@ -5,5 +6,9 @@ type AppProviderProps = {
 };
 
 export function AppProvider({ children }: AppProviderProps) {
-  return <ProvidersProvider>{children}</ProvidersProvider>;
+  return (
+    <NotificationsProvider>
+      <ProvidersProvider>{children}</ProvidersProvider>
+    </NotificationsProvider>
+  );
 }

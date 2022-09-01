@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 import { MemoryRouter } from 'react-router-dom';
 import { AppContainer } from './components/AppContainer';
 import { AppProvider } from './hooks';
@@ -10,13 +11,15 @@ export function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
       <CustomFonts />
-      <AppProvider>
-        <MemoryRouter>
-          <AppContainer>
-            <Router />
-          </AppContainer>
-        </MemoryRouter>
-      </AppProvider>
+      <NotificationsProvider>
+        <AppProvider>
+          <MemoryRouter>
+            <AppContainer>
+              <Router />
+            </AppContainer>
+          </MemoryRouter>
+        </AppProvider>
+      </NotificationsProvider>
     </MantineProvider>
   );
 }

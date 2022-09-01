@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { getErrMessage } from 'renderer/utils/error';
+import { useNotifications } from './notifications';
 
 export type Provider = {
   id: number;
@@ -29,6 +32,7 @@ const ProvidersContext = createContext<ProvidersProps>({} as ProvidersProps);
 export function ProvidersProvider({ children }: ProvidersProviderProps) {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { notify } = useNotifications();
 
   const createProvider = useCallback(
     async (provider: CreateProviderParams) => {
@@ -37,14 +41,20 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
         const createdProvider = await api.create(provider);
 
         setProviders([...providers, createdProvider]);
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.log(err);
+        notify({
+          message: 'O fornecedor foi cadastrado!',
+          type: 'success',
+        });
+      } catch (err: any) {
+        notify({
+          message: getErrMessage(err),
+          type: 'danger',
+        });
       } finally {
         setIsLoading(false);
       }
     },
-    [providers]
+    [providers, notify]
   );
 
   return (

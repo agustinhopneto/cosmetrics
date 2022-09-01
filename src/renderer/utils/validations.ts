@@ -15,12 +15,14 @@ export const validateName = (value: any) =>
 
 export const validateEmail = (value: any) =>
   validate(
-    /^\S+@\S+$/.test(value) && value.length >= 2 && value.length <= 200,
+    value
+      ? /^\S+@\S+\.\S+$/.test(value) && value.length >= 2 && value.length <= 200
+      : true,
     'Email inválido'
   );
 
 export const validatePhone = (value: any) =>
   validate(
-    value.length >= 8 && value.length <= 15,
+    value ? value.length >= 8 && value.length <= 15 : true,
     'Deve ter no mín. 8 caracteres e no máx. 15'
   );

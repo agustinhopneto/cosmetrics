@@ -55,6 +55,16 @@ export function Providers() {
   return (
     <>
       <LoadingOverlay visible={isLoading} overlayBlur={2} />
+      <Box className={classes.header}>
+        <Title>Fornecedores</Title>
+        <Button
+          onClick={() => setOpened(true)}
+          color="cyan"
+          leftIcon={<RiAddLine />}
+        >
+          Novo Fornecedor
+        </Button>
+      </Box>
       <Modal
         size="lg"
         centered
@@ -88,16 +98,6 @@ export function Providers() {
           </Box>
         </form>
       </Modal>
-      <Box className={classes.header}>
-        <Title>Fornecedores</Title>
-        <Button
-          onClick={() => setOpened(true)}
-          color="cyan"
-          leftIcon={<RiAddLine />}
-        >
-          Novo Fornecedor
-        </Button>
-      </Box>
     </>
   );
 }
