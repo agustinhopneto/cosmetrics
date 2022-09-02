@@ -17,8 +17,9 @@ export type CreateProviderParams = Pick<Provider, 'name' | 'email' | 'phone'>;
 
 type ProvidersProps = {
   providers: Provider[];
-  isLoading: boolean;
   createProvider: (provider: CreateProviderParams) => Promise<void>;
+  listProviders: (page: number, limit: number) => Promise<void>;
+  isLoading: boolean;
 };
 
 type ProvidersProviderProps = {
@@ -40,7 +41,7 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
         setIsLoading(true);
         const createdProvider = await api.create(provider);
 
-        setProviders([...providers, createdProvider]);
+        setProviders([createdProvider, ...providers]);
         notify({
           message: 'O fornecedor foi cadastrado!',
           type: 'success',
@@ -57,8 +58,18 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
     [providers, notify]
   );
 
+  const listProviders = useCallback(async (page: number, limit: number) => {
+    setIsLoading(true);
+    const listedProviders = await api.list(page, limit);
+
+    setProviders(listedProviders);
+    setIsLoading(false);
+  }, []);
+
   return (
-    <ProvidersContext.Provider value={{ providers, createProvider, isLoading }}>
+    <ProvidersContext.Provider
+      value={{ providers, createProvider, listProviders, isLoading }}
+    >
       {children}
     </ProvidersContext.Provider>
   );

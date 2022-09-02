@@ -7,5 +7,7 @@ contextBridge.exposeInMainWorld('api', {
   providers: {
     create: (provider: CreateProviderDTO) =>
       ipcRenderer.invoke(Routes.Providers.Create, provider),
+    list: (page: number, limit: number) =>
+      ipcRenderer.invoke(Routes.Providers.List, page, limit),
   },
 });

@@ -12,6 +12,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
     '@typescript-eslint/no-throw-literal': 'off',
+    'no-plusplus': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

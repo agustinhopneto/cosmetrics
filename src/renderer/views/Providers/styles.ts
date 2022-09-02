@@ -5,5 +5,7 @@ export const useStyles = createStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+
+    marginBottom: '32px',
   },
 }));

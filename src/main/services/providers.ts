@@ -24,3 +24,18 @@ export const createProvider = async (
 
   return insertedProvider;
 };
+
+export const listProviders = async (
+  page: number,
+  limit: number
+): Promise<Provider[]> => {
+  const offset = (page - 1) * limit;
+
+  const providers = await knex<Provider>('providers')
+    .offset(offset)
+    .limit(limit)
+    .select('*')
+    .orderBy('id', 'desc');
+
+  return providers;
+};

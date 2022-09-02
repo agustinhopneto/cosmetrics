@@ -9,6 +9,7 @@ export const theme: MantineThemeOverride = {
       styles: {
         root: {
           color: '#373A40',
+          overflowWrap: 'break-word',
         },
       },
     },
@@ -16,6 +17,7 @@ export const theme: MantineThemeOverride = {
       styles: {
         root: {
           color: '#5C5F66',
+          overflowWrap: 'break-word',
         },
       },
     },

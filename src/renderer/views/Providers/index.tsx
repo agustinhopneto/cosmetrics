@@ -2,13 +2,17 @@ import {
   Box,
   LoadingOverlay,
   Modal,
+  Paper,
+  ScrollArea,
   Stack,
+  Table,
   TextInput,
   Title,
 } from '@mantine/core';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { RiAddLine } from 'react-icons/ri';
 import { useForm } from '@mantine/form';
+import dayjs from 'dayjs';
 import { CreateProviderParams, useProviders } from '../../hooks/providers';
 import { Button } from '../../components/Button';
 import { useStyles } from './styles';
@@ -23,7 +27,8 @@ export function Providers() {
 
   const [opened, setOpened] = useState(false);
 
-  const { createProvider, isLoading } = useProviders();
+  const { providers, createProvider, listProviders, isLoading } =
+    useProviders();
 
   const form = useForm({
     initialValues: {
@@ -37,6 +42,10 @@ export function Providers() {
       phone: (value) => validatePhone(value),
     },
   });
+
+  useEffect(() => {
+    listProviders(1, 15);
+  }, [listProviders]);
 
   const handleCreateProvider = useCallback(
     async (values: CreateProviderParams) => {
@@ -65,6 +74,32 @@ export function Providers() {
           Novo Fornecedor
         </Button>
       </Box>
+      <ScrollArea>
+        <Paper>
+          <Table highlightOnHover horizontalSpacing="xl" verticalSpacing="md">
+            <thead>
+              <tr>
+                <th>#ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Data de Cadastro</th>
+              </tr>
+            </thead>
+            <tbody>
+              {providers.map((provider) => (
+                <tr key={provider.id}>
+                  <td>#{provider.id}</td>
+                  <td>{provider.name}</td>
+                  <td>{provider.email}</td>
+                  <td>{provider.phone}</td>
+                  <td>{dayjs(provider.created_at).format('DD/MM/YYYY')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Paper>
+      </ScrollArea>
       <Modal
         size="lg"
         centered
