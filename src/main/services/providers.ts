@@ -1,5 +1,6 @@
 import { CreateProviderDTO, Provider } from '../dtos/provider';
 import { knex } from '../database/connection';
+import { Paginated } from '../dtos';
 
 export const createProvider = async (
   provider: CreateProviderDTO
@@ -28,14 +29,24 @@ export const createProvider = async (
 export const listProviders = async (
   page: number,
   limit: number
-): Promise<Provider[]> => {
+): Promise<Paginated<Provider>> => {
   const offset = (page - 1) * limit;
 
-  const providers = await knex<Provider>('providers')
+  const [{ count: total }] = await knex<number>('providers').count({
+    count: '*',
+  });
+
+  const totalPages = Math.ceil(Number(total) / limit);
+
+  const result = await knex<Provider>('providers')
     .offset(offset)
     .limit(limit)
     .select('*')
     .orderBy('id', 'desc');
 
-  return providers;
+  return {
+    total: total as number,
+    totalPages,
+    result,
+  };
 };

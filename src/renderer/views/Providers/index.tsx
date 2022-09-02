@@ -2,12 +2,15 @@ import {
   Box,
   LoadingOverlay,
   Modal,
+  Pagination,
   Paper,
   ScrollArea,
   Stack,
   Table,
   TextInput,
   Title,
+  Text,
+  Select,
 } from '@mantine/core';
 import { useCallback, useEffect, useState } from 'react';
 import { RiAddLine } from 'react-icons/ri';
@@ -22,10 +25,14 @@ import {
   validatePhone,
 } from '../../utils/validations';
 
+const limits = ['10', '20', '50', '100'];
+
 export function Providers() {
   const { classes } = useStyles();
 
   const [opened, setOpened] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageLimit, setPageLimit] = useState<string | null>(limits[0]);
 
   const { providers, createProvider, listProviders, isLoading } =
     useProviders();
@@ -44,8 +51,8 @@ export function Providers() {
   });
 
   useEffect(() => {
-    listProviders(1, 15);
-  }, [listProviders]);
+    listProviders(page, Number(pageLimit));
+  }, [listProviders, page, pageLimit]);
 
   const handleCreateProvider = useCallback(
     async (values: CreateProviderParams) => {
@@ -66,40 +73,61 @@ export function Providers() {
       <LoadingOverlay visible={isLoading} overlayBlur={2} />
       <Box className={classes.header}>
         <Title>Fornecedores</Title>
-        <Button
-          onClick={() => setOpened(true)}
-          color="cyan"
-          leftIcon={<RiAddLine />}
-        >
+        <Button onClick={() => setOpened(true)} leftIcon={<RiAddLine />}>
           Novo Fornecedor
         </Button>
       </Box>
-      <ScrollArea>
-        <Paper>
-          <Table highlightOnHover horizontalSpacing="xl" verticalSpacing="md">
-            <thead>
-              <tr>
-                <th>#ID</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Data de Cadastro</th>
-              </tr>
-            </thead>
-            <tbody>
-              {providers.map((provider) => (
-                <tr key={provider.id}>
-                  <td>#{provider.id}</td>
-                  <td>{provider.name}</td>
-                  <td>{provider.email}</td>
-                  <td>{provider.phone}</td>
-                  <td>{dayjs(provider.created_at).format('DD/MM/YYYY')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Paper>
-      </ScrollArea>
+      {providers.result && (
+        <>
+          <ScrollArea>
+            <Paper>
+              <Table
+                highlightOnHover
+                horizontalSpacing="xl"
+                verticalSpacing="md"
+              >
+                <thead>
+                  <tr>
+                    <th>#ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Data de Cadastro</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {providers.result.map((provider) => (
+                    <tr key={provider.id}>
+                      <td>#{provider.id}</td>
+                      <td>{provider.name}</td>
+                      <td>{provider.email}</td>
+                      <td>{provider.phone}</td>
+                      <td>{dayjs(provider.created_at).format('DD/MM/YYYY')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Paper>
+          </ScrollArea>
+          <Paper className={classes.pagination} p="xl">
+            <Box className={classes.paginationContent}>
+              <Text>{providers.total} itens |</Text>
+              <Select
+                className={classes.paginationLimit}
+                value={pageLimit}
+                onChange={setPageLimit}
+                data={limits}
+              />
+              <Text>/ página</Text>
+            </Box>
+            <Pagination
+              page={page}
+              onChange={setPage}
+              total={providers.totalPages}
+            />
+          </Paper>
+        </>
+      )}
       <Modal
         size="lg"
         centered
@@ -127,9 +155,7 @@ export function Providers() {
             />
           </Stack>
           <Box mt="xl" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button type="submit" color="cyan">
-              Cadastrar
-            </Button>
+            <Button type="submit">Cadastrar</Button>
           </Box>
         </form>
       </Modal>

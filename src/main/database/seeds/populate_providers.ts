@@ -7,10 +7,10 @@ export async function seed(knex: Knex): Promise<void> {
 
   const providers: Partial<Provider>[] = [];
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 100; i++) {
     providers.push({
       name: faker.company.name(),
-      email: faker.internet.email(),
+      email: faker.internet.email().toLowerCase(),
       phone: faker.phone.number(),
     });
   }

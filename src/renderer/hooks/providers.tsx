@@ -3,6 +3,12 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 import { getErrMessage } from 'renderer/utils/error';
 import { useNotifications } from './notifications';
 
+export type Paginated<T> = {
+  total: number;
+  totalPages: number;
+  result: T[];
+};
+
 export type Provider = {
   id: number;
   name: string;
@@ -16,7 +22,7 @@ export type Provider = {
 export type CreateProviderParams = Pick<Provider, 'name' | 'email' | 'phone'>;
 
 type ProvidersProps = {
-  providers: Provider[];
+  providers: Paginated<Provider>;
   createProvider: (provider: CreateProviderParams) => Promise<void>;
   listProviders: (page: number, limit: number) => Promise<void>;
   isLoading: boolean;
@@ -31,7 +37,9 @@ const api = window.api.providers;
 const ProvidersContext = createContext<ProvidersProps>({} as ProvidersProps);
 
 export function ProvidersProvider({ children }: ProvidersProviderProps) {
-  const [providers, setProviders] = useState<Provider[]>([]);
+  const [providers, setProviders] = useState<Paginated<Provider>>(
+    {} as Paginated<Provider>
+  );
   const [isLoading, setIsLoading] = useState(false);
   const { notify } = useNotifications();
 
@@ -41,7 +49,11 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
         setIsLoading(true);
         const createdProvider = await api.create(provider);
 
-        setProviders([createdProvider, ...providers]);
+        setProviders({
+          ...providers,
+          total: providers.total + 1,
+          result: [createdProvider, ...providers.result],
+        });
         notify({
           message: 'O fornecedor foi cadastrado!',
           type: 'success',

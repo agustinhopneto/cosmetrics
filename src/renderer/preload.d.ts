@@ -1,3 +1,4 @@
+import { Paginated } from 'main/dtos';
 import { CreateProviderDTO, Provider } from '../main/dtos/provider';
 
 declare global {
@@ -6,7 +7,7 @@ declare global {
       hello: (message: string) => Promise<string>;
       providers: {
         create: (provider: CreateProviderDTO) => Promise<Provider>;
-        list: (page: number, limit: number) => Promise<Provider[]>;
+        list: (page: number, limit: number) => Promise<Paginated<Provider>>;
       };
     };
   }
