@@ -2,20 +2,13 @@ import {
   Box,
   LoadingOverlay,
   Modal,
-  Pagination,
-  Paper,
-  ScrollArea,
   Stack,
-  Table,
   TextInput,
   Title,
-  Text,
-  Select,
 } from '@mantine/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { RiAddLine } from 'react-icons/ri';
 import { useForm } from '@mantine/form';
-import dayjs from 'dayjs';
 import { CreateProviderParams, useProviders } from '../../hooks/providers';
 import { Button } from '../../components/Button';
 import { useStyles } from './styles';
@@ -24,18 +17,14 @@ import {
   validateName,
   validatePhone,
 } from '../../utils/validations';
-
-const limits = ['10', '20', '50', '100'];
+import { ProvidersTable } from './ProvidersTable';
 
 export function Providers() {
   const { classes } = useStyles();
 
   const [opened, setOpened] = useState(false);
-  const [page, setPage] = useState(1);
-  const [pageLimit, setPageLimit] = useState<string | null>(limits[0]);
 
-  const { providers, createProvider, listProviders, isLoading } =
-    useProviders();
+  const { createProvider, isLoading } = useProviders();
 
   const form = useForm({
     initialValues: {
@@ -49,10 +38,6 @@ export function Providers() {
       phone: (value) => validatePhone(value),
     },
   });
-
-  useEffect(() => {
-    listProviders(page, Number(pageLimit));
-  }, [listProviders, page, pageLimit]);
 
   const handleCreateProvider = useCallback(
     async (values: CreateProviderParams) => {
@@ -77,57 +62,7 @@ export function Providers() {
           Novo Fornecedor
         </Button>
       </Box>
-      {providers.result && (
-        <>
-          <ScrollArea>
-            <Paper>
-              <Table
-                highlightOnHover
-                horizontalSpacing="xl"
-                verticalSpacing="md"
-              >
-                <thead>
-                  <tr>
-                    <th>#ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Data de Cadastro</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {providers.result.map((provider) => (
-                    <tr key={provider.id}>
-                      <td>#{provider.id}</td>
-                      <td>{provider.name}</td>
-                      <td>{provider.email}</td>
-                      <td>{provider.phone}</td>
-                      <td>{dayjs(provider.created_at).format('DD/MM/YYYY')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Paper>
-          </ScrollArea>
-          <Paper className={classes.pagination} p="xl">
-            <Box className={classes.paginationContent}>
-              <Text>{providers.total} itens |</Text>
-              <Select
-                className={classes.paginationLimit}
-                value={pageLimit}
-                onChange={setPageLimit}
-                data={limits}
-              />
-              <Text>/ página</Text>
-            </Box>
-            <Pagination
-              page={page}
-              onChange={setPage}
-              total={providers.totalPages}
-            />
-          </Paper>
-        </>
-      )}
+      <ProvidersTable />
       <Modal
         size="lg"
         centered
