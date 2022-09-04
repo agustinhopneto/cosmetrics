@@ -1,10 +1,22 @@
 import { Knex } from 'knex';
 import path from 'path';
 
+export const dbPath =
+  process.env.NODE_ENV === 'development'
+    ? path.resolve(__dirname, 'database.sqlite')
+    : path.resolve(
+        __dirname,
+        'resources',
+        'src',
+        'main',
+        'database',
+        'database.sqlite'
+      );
+
 export const knexConfig: Knex.Config = {
   client: 'sqlite3',
   connection: {
-    filename: path.resolve(__dirname, 'database.sqlite'),
+    filename: dbPath,
   },
   migrations: {
     tableName: '@knex_migrations',

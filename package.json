@@ -16,8 +16,10 @@
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
     "migration:create": "knex migrate:make",
-    "migration:run": "knex migrate:latest",
-    "migration:rollback": "knex migrate:rollback"
+    "migration:run": "cross-env NODE_ENV=development knex migrate:latest",
+    "migration:rollback": "cross-env NODE_ENV=development knex migrate:rollback",
+    "seed:create": "knex seed:make",
+    "seed:run": "cross-env NODE_ENV=development knex seed:run"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -87,12 +89,11 @@
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.2.1",
-    "knex": "^2.2.0",
+    "knex": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
-    "react-router-dom": "^6.3.0",
-    "sqlite3": "^5.0.11"
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
@@ -144,6 +145,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.54.4",
     "sass-loader": "^13.0.2",
+    "sqlite3": "^5.0.11",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.5",
     "ts-jest": "^28.0.8",
@@ -158,7 +160,7 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "cosmetrics.",
+    "productName": "Cosmetrics.",
     "appId": "dev.gustin.cosmetrics",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
@@ -213,12 +215,13 @@
       "output": "release/build"
     },
     "extraResources": [
-      "./assets/**"
+      "./assets/**",
+      "./src/main/database/database.sqlite"
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "agustinhopneto",
+      "repo": "cosmetrics"
     }
   },
   "collective": {
