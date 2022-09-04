@@ -1,4 +1,4 @@
-import { Paper, ScrollArea, Table, Text } from '@mantine/core';
+import { Paper, ScrollArea, Table } from '@mantine/core';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useProviders } from '../../../hooks/providers';
