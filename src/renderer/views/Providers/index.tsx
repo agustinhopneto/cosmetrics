@@ -1,99 +1,27 @@
-import {
-  Box,
-  LoadingOverlay,
-  Modal,
-  Stack,
-  TextInput,
-  Title,
-} from '@mantine/core';
-import { useCallback, useState } from 'react';
+import { LoadingOverlay } from '@mantine/core';
+import { useState } from 'react';
 import { RiAddLine } from 'react-icons/ri';
-import { useForm } from '@mantine/form';
-import { CreateProviderParams, useProviders } from '../../hooks/providers';
+import { AppHeader } from 'renderer/components/AppHeader';
+import { useProviders } from '../../hooks/providers';
 import { Button } from '../../components/Button';
-import { useStyles } from './styles';
-import {
-  validateEmail,
-  validateName,
-  validatePhone,
-} from '../../utils/validations';
 import { ProvidersTable } from './ProvidersTable';
+import { ProviderModal } from './ProviderModal';
 
 export function Providers() {
-  const { classes } = useStyles();
-
   const [opened, setOpened] = useState(false);
 
-  const { createProvider, isLoading } = useProviders();
-
-  const form = useForm({
-    initialValues: {
-      name: '',
-      email: '',
-      phone: '',
-    },
-    validate: {
-      name: (value) => validateName(value),
-      email: (value) => validateEmail(value),
-      phone: (value) => validatePhone(value),
-    },
-  });
-
-  const handleCreateProvider = useCallback(
-    async (values: CreateProviderParams) => {
-      await createProvider(values);
-      form.reset();
-      setOpened(false);
-    },
-    [form, createProvider]
-  );
-
-  const handleCloseCreateProviderModal = useCallback(() => {
-    form.clearErrors();
-    setOpened(false);
-  }, [form]);
+  const { isLoading } = useProviders();
 
   return (
     <>
       <LoadingOverlay visible={isLoading} overlayBlur={2} />
-      <Box className={classes.header}>
-        <Title>Fornecedores</Title>
+      <AppHeader title="Fornecedores">
         <Button onClick={() => setOpened(true)} leftIcon={<RiAddLine />}>
           Novo Fornecedor
         </Button>
-      </Box>
+      </AppHeader>
       <ProvidersTable />
-      <Modal
-        size="lg"
-        centered
-        opened={opened}
-        onClose={handleCloseCreateProviderModal}
-        title="Novo Fornecedor"
-      >
-        <form onSubmit={form.onSubmit(handleCreateProvider)}>
-          <Stack spacing="sm">
-            <TextInput
-              placeholder="Nome do fornecedor"
-              label="Nome"
-              withAsterisk
-              {...form.getInputProps('name')}
-            />
-            <TextInput
-              placeholder="email@exemplo.com"
-              label="Email"
-              {...form.getInputProps('email')}
-            />
-            <TextInput
-              placeholder="(xx) xxxxx-xxxx"
-              label="Telefone"
-              {...form.getInputProps('phone')}
-            />
-          </Stack>
-          <Box mt="xl" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button type="submit">Cadastrar</Button>
-          </Box>
-        </form>
-      </Modal>
+      <ProviderModal opened={opened} setOpened={setOpened} />
     </>
   );
 }
