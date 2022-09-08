@@ -22,7 +22,7 @@ export namespace Routes {
     Create = '/providers/create',
     List = '/providers/list',
     Show = '/providers/show',
-    Upate = '/providers/update',
+    Update = '/providers/update',
     Delete = '/providers/delete',
   }
 }

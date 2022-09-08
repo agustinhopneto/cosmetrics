@@ -9,3 +9,7 @@ export type Provider = {
 };
 
 export type CreateProviderDTO = Pick<Provider, 'name' | 'email' | 'phone'>;
+export type UpdateProviderDTO = Pick<
+  Provider,
+  'id' | 'name' | 'email' | 'phone'
+>;

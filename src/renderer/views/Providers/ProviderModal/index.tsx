@@ -1,7 +1,11 @@
 import { Box, Button, Modal, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useCallback } from 'react';
-import { CreateProviderParams, useProviders } from '../../../hooks/providers';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  CreateProviderParams,
+  UpdateProviderParams,
+  useProviders,
+} from '../../../hooks/providers';
 import {
   validateEmail,
   validateName,
@@ -11,13 +15,17 @@ import {
 type ProviderModalProps = {
   opened: boolean;
   setOpened: (modalState: boolean) => void;
+  provider?: CreateProviderParams | UpdateProviderParams;
+  isEditing?: boolean;
 };
-
 export function ProviderModal({
   opened = false,
   setOpened,
+  provider,
+  isEditing = false,
 }: ProviderModalProps) {
-  const { createProvider } = useProviders();
+  const { createProvider, updateProvider } = useProviders();
+  const [isFormReadyToEdit, setIsFormReadyToEdit] = useState(isEditing);
 
   const form = useForm({
     initialValues: {
@@ -30,20 +38,43 @@ export function ProviderModal({
       email: (value) => validateEmail(value),
       phone: (value) => validatePhone(value),
     },
+    clearInputErrorOnChange: true,
   });
 
-  const handleCreateProvider = useCallback(
-    async (values: CreateProviderParams) => {
-      await createProvider(values);
+  useEffect(() => {
+    if (isFormReadyToEdit && provider && opened) {
+      form.setValues({
+        name: provider.name ? provider.name : '',
+        email: provider.email ? provider.email : '',
+        phone: provider.phone ? provider.phone : '',
+      });
+
+      setIsFormReadyToEdit(false);
+    }
+  }, [form, isFormReadyToEdit, provider, setIsFormReadyToEdit, opened]);
+
+  const handleSubmit = useCallback(
+    async (params: CreateProviderParams | UpdateProviderParams) => {
+      if (isEditing && provider) {
+        await updateProvider({
+          ...(provider as UpdateProviderParams),
+          ...params,
+        });
+      } else {
+        await createProvider(params as UpdateProviderParams);
+      }
+
       form.reset();
       setOpened(false);
+      setIsFormReadyToEdit(true);
     },
-    [form, createProvider, setOpened]
+    [form, createProvider, setOpened, isEditing, updateProvider, provider]
   );
 
   const handleCloseCreateProviderModal = useCallback(() => {
     form.clearErrors();
     setOpened(false);
+    setIsFormReadyToEdit(true);
   }, [form, setOpened]);
 
   return (
@@ -54,7 +85,7 @@ export function ProviderModal({
       onClose={handleCloseCreateProviderModal}
       title="Novo Fornecedor"
     >
-      <form onSubmit={form.onSubmit(handleCreateProvider)}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack spacing="sm">
           <TextInput
             placeholder="Nome do fornecedor"
@@ -74,7 +105,7 @@ export function ProviderModal({
           />
         </Stack>
         <Box mt="xl" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button type="submit">Cadastrar</Button>
+          <Button type="submit">{isEditing ? 'Atualizar' : 'Cadastrar'}</Button>
         </Box>
       </form>
     </Modal>

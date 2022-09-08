@@ -1,5 +1,9 @@
 import { Paginated } from 'main/dtos';
-import { CreateProviderDTO, Provider } from '../main/dtos/provider';
+import {
+  CreateProviderDTO,
+  Provider,
+  UpdateProviderDTO,
+} from '../main/dtos/provider';
 
 declare global {
   interface Window {
@@ -8,6 +12,7 @@ declare global {
       providers: {
         create: (provider: CreateProviderDTO) => Promise<Provider>;
         list: (page: number, limit: number) => Promise<Paginated<Provider>>;
+        update: (provider: UpdateProviderDTO) => Promise<Provider>;
       };
     };
   }

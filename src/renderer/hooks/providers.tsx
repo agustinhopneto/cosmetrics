@@ -20,10 +20,15 @@ export type Provider = {
 };
 
 export type CreateProviderParams = Pick<Provider, 'name' | 'email' | 'phone'>;
+export type UpdateProviderParams = Pick<
+  Provider,
+  'id' | 'name' | 'email' | 'phone'
+>;
 
 type ProvidersProps = {
   providers: Paginated<Provider>;
   createProvider: (provider: CreateProviderParams) => Promise<void>;
+  updateProvider: (provider: UpdateProviderParams) => Promise<void>;
   listProviders: (page: number, limit: number) => Promise<void>;
   isLoading: boolean;
 };
@@ -51,6 +56,7 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
 
         setProviders({
           ...providers,
+          totalPages: providers.totalPages === 0 ? 1 : providers.totalPages,
           total: providers.total + 1,
           result: [createdProvider, ...providers.result],
         });
@@ -78,9 +84,49 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
     setIsLoading(false);
   }, []);
 
+  const updateProvider = useCallback(
+    async (provider: UpdateProviderParams) => {
+      try {
+        setIsLoading(true);
+        const updatedProvider = await api.update(provider);
+
+        const newProviders = providers.result;
+
+        const providerIndex = newProviders.findIndex(
+          (item) => item.id === provider.id
+        );
+
+        newProviders[providerIndex] = updatedProvider;
+
+        setProviders({
+          ...providers,
+          result: newProviders,
+        });
+        notify({
+          message: 'O fornecedor foi atualizado!',
+          type: 'success',
+        });
+      } catch (err: any) {
+        notify({
+          message: getErrMessage(err),
+          type: 'danger',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [notify, providers]
+  );
+
   return (
     <ProvidersContext.Provider
-      value={{ providers, createProvider, listProviders, isLoading }}
+      value={{
+        providers,
+        createProvider,
+        updateProvider,
+        listProviders,
+        isLoading,
+      }}
     >
       {children}
     </ProvidersContext.Provider>

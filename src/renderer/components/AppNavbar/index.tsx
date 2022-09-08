@@ -19,7 +19,7 @@ export function AppNavbar() {
 
   return (
     <Navbar width={{ base: 220 }}>
-      <Navbar.Section py={32} px={48}>
+      <Navbar.Section py={32} px={48} mb={64}>
         <Image src={logo} />
       </Navbar.Section>
       <Navbar.Section>

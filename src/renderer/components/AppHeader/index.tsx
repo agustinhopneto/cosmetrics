@@ -9,7 +9,7 @@ export function AppHeader({ children, title }: AppHeaderProps) {
   const { classes } = useStyles();
 
   return (
-    <Box className={classes.header}>
+    <Box className={classes.header} mt="lg">
       <Title>{title}</Title>
       {children}
     </Box>

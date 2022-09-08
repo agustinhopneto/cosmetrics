@@ -1,6 +1,10 @@
 import { ipcMain } from 'electron';
-import { CreateProviderDTO } from 'main/dtos/provider';
-import { createProvider, listProviders } from '../services/providers';
+import { CreateProviderDTO, UpdateProviderDTO } from 'main/dtos/provider';
+import {
+  createProvider,
+  listProviders,
+  updateProvider,
+} from '../services/providers';
 import { Routes } from '../router';
 
 const providers = () => {
@@ -15,6 +19,13 @@ const providers = () => {
     Routes.Providers.List,
     async (_, page: number, limit: number) => {
       return listProviders(page, limit);
+    }
+  );
+
+  ipcMain.handle(
+    Routes.Providers.Update,
+    async (_, provider: UpdateProviderDTO) => {
+      return updateProvider(provider);
     }
   );
 };

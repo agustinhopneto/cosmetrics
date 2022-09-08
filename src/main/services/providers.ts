@@ -1,16 +1,21 @@
-import { CreateProviderDTO, Provider } from '../dtos/provider';
+import dayjs from 'dayjs';
+import {
+  CreateProviderDTO,
+  Provider,
+  UpdateProviderDTO,
+} from '../dtos/provider';
 import { knex } from '../database/connection';
 import { Paginated } from '../dtos';
 
 export const createProvider = async (
   provider: CreateProviderDTO
 ): Promise<Provider> => {
-  const [providersExists] = await knex<Provider>('providers')
+  const [providerExists] = await knex<Provider>('providers')
     .select('*')
     .whereRaw('UPPER(name) = ?', [provider.name.toUpperCase()])
     .limit(1);
 
-  if (providersExists) {
+  if (providerExists) {
     throw new Error('Fornecedor já existe!');
   }
 
@@ -49,4 +54,28 @@ export const listProviders = async (
     totalPages,
     result,
   };
+};
+
+export const updateProvider = async (provider: UpdateProviderDTO) => {
+  const [providerExists] = await knex<Provider>('providers')
+    .select('*')
+    .whereRaw('UPPER(name) = ?', [provider.name.toUpperCase()])
+    .limit(1);
+
+  if (providerExists && providerExists.id !== provider.id) {
+    throw new Error('Fornecedor já existe!');
+  }
+
+  await knex<Provider>('providers')
+    .update({ ...provider, updated_at: dayjs().toISOString() })
+    .where({ id: provider.id });
+
+  const [updatedProvider] = await knex<Provider>('providers')
+    .select('*')
+    .where({
+      id: provider.id,
+    })
+    .limit(1);
+
+  return updatedProvider;
 };
