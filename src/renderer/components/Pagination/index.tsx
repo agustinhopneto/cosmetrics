@@ -5,6 +5,7 @@ import {
   Select,
   Pagination as MPagination,
 } from '@mantine/core';
+import { useCallback } from 'react';
 import { useStyles } from './styles';
 
 type PaginationProps = {
@@ -12,7 +13,7 @@ type PaginationProps = {
   pageLimit: string | null;
   setPageLimit: (value: string | null) => void;
   page: number;
-  setPage?: ((page: number) => void) | undefined;
+  setPage?: (page: number) => void;
   totalPages: number;
 };
 
@@ -27,6 +28,18 @@ export function Pagination({
   totalPages,
 }: PaginationProps) {
   const { classes } = useStyles();
+
+  const handleLimitChange = useCallback(
+    (value: string | null) => {
+      if (setPage) {
+        setPage(1);
+      }
+
+      setPageLimit(value);
+    },
+    [setPage, setPageLimit]
+  );
+
   return (
     <Paper className={classes.pagination} p="xl">
       <Box className={classes.paginationContent}>
@@ -34,7 +47,7 @@ export function Pagination({
         <Select
           className={classes.paginationLimit}
           value={pageLimit}
-          onChange={setPageLimit}
+          onChange={handleLimitChange}
           data={pageLimits}
         />
         <Text>/ página</Text>

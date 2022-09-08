@@ -6,6 +6,7 @@ import { useProviders } from '../../hooks/providers';
 import { Button } from '../../components/Button';
 import { ProvidersTable } from './ProvidersTable';
 import { ProviderModal } from './ProviderModal';
+import { ProvidersFilters } from './ProvidersFilters';
 
 export function Providers() {
   const [opened, setOpened] = useState(false);
@@ -20,6 +21,7 @@ export function Providers() {
           Novo Fornecedor
         </Button>
       </AppHeader>
+      <ProvidersFilters />
       <ProvidersTable />
       <ProviderModal opened={opened} setOpened={setOpened} />
     </>

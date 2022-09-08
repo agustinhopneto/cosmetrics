@@ -3,21 +3,19 @@ import dayjs from 'dayjs';
 import { useEffect, useState, useCallback } from 'react';
 import { RiEdit2Fill, RiEyeFill } from 'react-icons/ri';
 import { Provider, useProviders } from '../../../hooks/providers';
-import { pageLimits, Pagination } from '../../../components/Pagination';
+import { Pagination } from '../../../components/Pagination';
 import { ProviderModal } from '../ProviderModal';
 
 export function ProvidersTable() {
   const [opened, setOpened] = useState(false);
   const [editProvider, setEditProvider] = useState<Provider>({} as Provider);
 
-  const [page, setPage] = useState(1);
-  const [pageLimit, setPageLimit] = useState<string | null>(pageLimits[0]);
-
-  const { providers, listProviders } = useProviders();
+  const { providers, listProviders, page, pageLimit, setPage, setPageLimit } =
+    useProviders();
 
   useEffect(() => {
-    listProviders(page, Number(pageLimit));
-  }, [listProviders, page, pageLimit]);
+    listProviders();
+  }, [listProviders]);
 
   const handleEditProvider = useCallback((provider: Provider) => {
     setEditProvider(provider);
@@ -27,7 +25,7 @@ export function ProvidersTable() {
   return (
     <>
       <ScrollArea>
-        <Paper>
+        <Paper p="sm">
           <Table highlightOnHover horizontalSpacing="xl" verticalSpacing="md">
             <thead>
               <tr>
@@ -56,7 +54,7 @@ export function ProvidersTable() {
                         <ActionIcon
                           onClick={() => handleEditProvider(provider)}
                           ml="sm"
-                          color="pink"
+                          color="cyan"
                           variant="subtle"
                         >
                           <RiEdit2Fill />

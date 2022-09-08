@@ -13,3 +13,6 @@ export type UpdateProviderDTO = Pick<
   Provider,
   'id' | 'name' | 'email' | 'phone'
 >;
+export type FilterProvidersDTO = Pick<Provider, 'email' | 'phone'> & {
+  name?: string;
+};

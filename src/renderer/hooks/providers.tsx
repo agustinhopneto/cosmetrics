@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { getErrMessage } from 'renderer/utils/error';
+import { pageLimits } from '../components/Pagination';
+import { getErrMessage } from '../utils/error';
 import { useNotifications } from './notifications';
 
 export type Paginated<T> = {
@@ -19,6 +20,12 @@ export type Provider = {
   deleted_at: string;
 };
 
+export type ProviderFilters = {
+  name?: string;
+  email?: string;
+  phone?: string;
+};
+
 export type CreateProviderParams = Pick<Provider, 'name' | 'email' | 'phone'>;
 export type UpdateProviderParams = Pick<
   Provider,
@@ -29,8 +36,14 @@ type ProvidersProps = {
   providers: Paginated<Provider>;
   createProvider: (provider: CreateProviderParams) => Promise<void>;
   updateProvider: (provider: UpdateProviderParams) => Promise<void>;
-  listProviders: (page: number, limit: number) => Promise<void>;
+  listProviders: () => Promise<void>;
   isLoading: boolean;
+  page: number;
+  setPage: (value: number) => void;
+  pageLimit: string | null;
+  setPageLimit: (value: string | null) => void;
+  filters?: ProviderFilters;
+  setFilters: (filters?: ProviderFilters) => void;
 };
 
 type ProvidersProviderProps = {
@@ -47,6 +60,13 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
   );
   const [isLoading, setIsLoading] = useState(false);
   const { notify } = useNotifications();
+
+  const [page, setPage] = useState(1);
+  const [pageLimit, setPageLimit] = useState<string | null>(pageLimits[0]);
+
+  const [filters, setFilters] = useState<ProviderFilters | undefined>(
+    undefined
+  );
 
   const createProvider = useCallback(
     async (provider: CreateProviderParams) => {
@@ -76,13 +96,13 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
     [providers, notify]
   );
 
-  const listProviders = useCallback(async (page: number, limit: number) => {
+  const listProviders = useCallback(async () => {
     setIsLoading(true);
-    const listedProviders = await api.list(page, limit);
+    const listedProviders = await api.list(page, Number(pageLimit), filters);
 
     setProviders(listedProviders);
     setIsLoading(false);
-  }, []);
+  }, [page, pageLimit, filters]);
 
   const updateProvider = useCallback(
     async (provider: UpdateProviderParams) => {
@@ -126,6 +146,12 @@ export function ProvidersProvider({ children }: ProvidersProviderProps) {
         updateProvider,
         listProviders,
         isLoading,
+        page,
+        setPage,
+        pageLimit,
+        setPageLimit,
+        filters,
+        setFilters,
       }}
     >
       {children}

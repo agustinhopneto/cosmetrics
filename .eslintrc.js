@@ -13,6 +13,8 @@ module.exports = {
     'react/require-default-props': 'off',
     '@typescript-eslint/no-throw-literal': 'off',
     'no-plusplus': 'off',
+    'promise/valid-params': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

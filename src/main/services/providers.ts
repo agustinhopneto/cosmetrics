@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
+import { clearFilters } from '../utils/clearFilters';
 import {
   CreateProviderDTO,
+  FilterProvidersDTO,
   Provider,
   UpdateProviderDTO,
 } from '../dtos/provider';
@@ -12,7 +14,7 @@ export const createProvider = async (
 ): Promise<Provider> => {
   const [providerExists] = await knex<Provider>('providers')
     .select('*')
-    .whereRaw('UPPER(name) = ?', [provider.name.toUpperCase()])
+    .whereRaw('UPPER(name) = UPPER(?)', [provider.name])
     .limit(1);
 
   if (providerExists) {
@@ -33,21 +35,36 @@ export const createProvider = async (
 
 export const listProviders = async (
   page: number,
-  limit: number
+  limit: number,
+  filters?: FilterProvidersDTO
 ): Promise<Paginated<Provider>> => {
-  const offset = (page - 1) * limit;
+  const query = knex<Provider>('providers');
 
-  const [{ count: total }] = await knex<number>('providers').count({
+  if (filters) {
+    Object.entries(clearFilters(filters)).forEach(([filter, value], index) => {
+      if (index === 0) {
+        query.whereLike(filter, `%${value}%`);
+        return;
+      }
+      query.andWhereLike(filter, `%${value}%`);
+    });
+  }
+
+  const countQuery = query.clone();
+
+  const [{ count: total }] = await countQuery.count({
     count: '*',
   });
 
-  const totalPages = Math.ceil(Number(total) / limit);
+  const offset = (page - 1) * limit;
 
-  const result = await knex<Provider>('providers')
+  const result = await query
+    .select('*')
     .offset(offset)
     .limit(limit)
-    .select('*')
     .orderBy('id', 'desc');
+
+  const totalPages = Math.ceil(Number(total) / limit);
 
   return {
     total: total as number,

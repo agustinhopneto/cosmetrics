@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { CreateProviderDTO, UpdateProviderDTO } from './dtos/provider';
+import {
+  CreateProviderDTO,
+  FilterProvidersDTO,
+  UpdateProviderDTO,
+} from './dtos/provider';
 import { Routes } from './router';
 
 contextBridge.exposeInMainWorld('api', {
@@ -7,8 +11,8 @@ contextBridge.exposeInMainWorld('api', {
   providers: {
     create: (provider: CreateProviderDTO) =>
       ipcRenderer.invoke(Routes.Providers.Create, provider),
-    list: (page: number, limit: number) =>
-      ipcRenderer.invoke(Routes.Providers.List, page, limit),
+    list: (page: number, limit: number, filters?: FilterProvidersDTO) =>
+      ipcRenderer.invoke(Routes.Providers.List, page, limit, filters),
     update: (provider: UpdateProviderDTO) =>
       ipcRenderer.invoke(Routes.Providers.Update, provider),
   },
