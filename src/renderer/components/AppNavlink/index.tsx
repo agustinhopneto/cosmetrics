@@ -7,11 +7,16 @@ type AppNavlinkProps = {
   route: Route;
   active: boolean;
   onClick: () => void;
+  children?: React.ReactNode;
 };
 
-export function AppNavlink({ route, active, onClick }: AppNavlinkProps) {
+export function AppNavlink({
+  route,
+  active,
+  onClick,
+  children,
+}: AppNavlinkProps) {
   const { classes } = useStyles();
-
   return (
     <NavLink
       className={classes.navlink}
@@ -20,15 +25,19 @@ export function AppNavlink({ route, active, onClick }: AppNavlinkProps) {
       variant="filled"
       label={route.name}
       onClick={onClick}
+      children={children || undefined}
+      opened
       icon={
-        <ThemeIcon
-          variant="filled"
-          sx={() => ({
-            color: '#fff',
-          })}
-        >
-          {route.icon}
-        </ThemeIcon>
+        route.icon ? (
+          <ThemeIcon
+            variant="filled"
+            sx={() => ({
+              color: '#fff',
+            })}
+          >
+            {route.icon}
+          </ThemeIcon>
+        ) : undefined
       }
     />
   );

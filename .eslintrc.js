@@ -15,6 +15,7 @@ module.exports = {
     'no-plusplus': 'off',
     'promise/valid-params': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    'react/no-children-prop': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

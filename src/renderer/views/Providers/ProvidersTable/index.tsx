@@ -47,7 +47,7 @@ export function ProvidersTable() {
                     <td>{provider.phone || '-------'}</td>
                     <td>{dayjs(provider.created_at).format('DD/MM/YYYY')}</td>
                     <td>
-                      <Group spacing={4}>
+                      <Group spacing={0}>
                         <ActionIcon color="pink" variant="subtle">
                           <RiEyeFill />
                         </ActionIcon>

@@ -1,12 +1,14 @@
-import { Routes as AppRoutes, Route } from 'react-router-dom';
-import { routes } from './index';
+import { Routes, Route } from 'react-router-dom';
+import { getNormalizedRoutes } from './index';
+
+const routes = getNormalizedRoutes();
 
 export function Router() {
   return (
-    <AppRoutes>
+    <Routes>
       {routes.map((route) => (
         <Route key={route.path} path={route.path} element={route.view} />
       ))}
-    </AppRoutes>
+    </Routes>
   );
 }

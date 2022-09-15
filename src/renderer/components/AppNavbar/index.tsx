@@ -29,6 +29,18 @@ export function AppNavbar() {
             route={route}
             active={activeRoute === route.path}
             onClick={() => handleNavigate(route.path)}
+            children={
+              route.children
+                ? route.children.map((children) => (
+                    <AppNavlink
+                      key={children.path}
+                      route={children}
+                      active={activeRoute === children.path}
+                      onClick={() => handleNavigate(children.path)}
+                    />
+                  ))
+                : undefined
+            }
           />
         ))}
       </Navbar.Section>
