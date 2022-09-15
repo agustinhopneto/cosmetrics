@@ -25,7 +25,7 @@ export function ProvidersTable() {
   return (
     <>
       <ScrollArea>
-        <Paper p="sm">
+        <Paper p="sm" withBorder>
           <Table highlightOnHover horizontalSpacing="xl" verticalSpacing="md">
             <thead>
               <tr>

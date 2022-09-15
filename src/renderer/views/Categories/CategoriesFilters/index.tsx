@@ -1,18 +1,16 @@
-import { Group, Paper, Text, TextInput } from '@mantine/core';
+import { Group, Paper, TextInput, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useCallback } from 'react';
 import { RiBrush2Line, RiFilter2Line } from 'react-icons/ri';
-import { ProviderFilters, useProviders } from '../../../hooks/providers';
+import { CategoryFilters, useCategories } from '../../../hooks/categories';
 import { Button } from '../../../components/Button';
 
-export function ProvidersFilters() {
-  const { setFilters, setPage } = useProviders();
+export function CategoriesFilters() {
+  const { setFilters } = useCategories();
 
-  const form = useForm<ProviderFilters>({
+  const form = useForm<CategoryFilters>({
     initialValues: {
       name: '',
-      email: '',
-      phone: '',
     },
   });
 
@@ -21,11 +19,10 @@ export function ProvidersFilters() {
   }, [form]);
 
   const handleSubmit = useCallback(
-    (values: ProviderFilters) => {
-      setPage(1);
+    (values: CategoryFilters) => {
       setFilters(values);
     },
-    [setFilters, setPage]
+    [setFilters]
   );
 
   return (
@@ -34,24 +31,15 @@ export function ProvidersFilters() {
         Filtros
       </Text>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Group grow mb="md" spacing="sm">
-          <TextInput
-            placeholder="Nome do fornecedor"
-            label="Nome"
-            {...form.getInputProps('name')}
-          />
-          <TextInput
-            placeholder="email@exemplo.com"
-            label="Email"
-            {...form.getInputProps('email')}
-          />
-          <TextInput
-            placeholder="(xx) xxxxx-xxxx"
-            label="Telefone"
-            {...form.getInputProps('phone')}
-          />
-        </Group>
-        <Group position="right" spacing="sm">
+        <TextInput
+          sx={{ width: '100%', maxWidth: 500 }}
+          placeholder="Nome da categoria"
+          label="Nome"
+          mb="md"
+          {...form.getInputProps('name')}
+        />
+
+        <Group position="right">
           <Button
             onClick={handleClearFilters}
             color="cyan"

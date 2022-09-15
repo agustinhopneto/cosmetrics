@@ -41,7 +41,7 @@ export function Pagination({
   );
 
   return (
-    <Paper className={classes.pagination} p="xl">
+    <Paper className={classes.pagination} p="xl" withBorder>
       <Box className={classes.paginationContent}>
         <Text>{totalItems} itens |</Text>
         <Select

@@ -28,5 +28,6 @@ export namespace Routes {
 
   export enum Categories {
     Create = '/categories/create',
+    List = '/categories/list',
   }
 }

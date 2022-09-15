@@ -13,14 +13,20 @@ export type Category = {
   deleted_at: string | null;
 };
 
+export type CategoryFilters = Pick<Category, 'name'>;
+
 export type CreateCategoryParams = Pick<
   Category,
   'name' | 'color' | 'description'
 >;
 
 type CategoriesProps = {
+  categories: Category[];
   createCategory: (category: CreateCategoryParams) => Promise<void>;
+  listCategories: () => Promise<void>;
   isLoading: boolean;
+  filters?: CategoryFilters;
+  setFilters: (filters?: CategoryFilters) => void;
 };
 
 type CategoriesProviderProps = {
@@ -32,6 +38,11 @@ const api = window.api.categories;
 const CategoriesContext = createContext<CategoriesProps>({} as CategoriesProps);
 
 export function CategoriesProvider({ children }: CategoriesProviderProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [filters, setFilters] = useState<CategoryFilters | undefined>(
+    undefined
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const { notify } = useNotifications();
 
@@ -39,7 +50,10 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     async (category: CreateCategoryParams) => {
       try {
         setIsLoading(true);
-        await api.create(category);
+
+        const createdCategory = await api.create(category);
+
+        setCategories([createdCategory, ...categories]);
 
         notify({
           message: 'A categoria foi cadastrada!',
@@ -54,11 +68,28 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
         setIsLoading(false);
       }
     },
-    [notify]
+    [notify, categories]
   );
 
+  const listCategories = useCallback(async () => {
+    setIsLoading(true);
+    const listedCategories = await api.list(filters);
+
+    setCategories(listedCategories);
+    setIsLoading(false);
+  }, [filters]);
+
   return (
-    <CategoriesContext.Provider value={{ createCategory, isLoading }}>
+    <CategoriesContext.Provider
+      value={{
+        createCategory,
+        listCategories,
+        categories,
+        setFilters,
+        filters,
+        isLoading,
+      }}
+    >
       {children}
     </CategoriesContext.Provider>
   );
