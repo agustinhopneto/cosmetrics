@@ -8,11 +8,10 @@ export type Provider = {
   deleted_at: string;
 };
 
-export type CreateProviderDTO = Pick<Provider, 'name' | 'email' | 'phone'>;
-export type UpdateProviderDTO = Pick<
-  Provider,
-  'id' | 'name' | 'email' | 'phone'
->;
-export type FilterProvidersDTO = Pick<Provider, 'email' | 'phone'> & {
-  name?: string;
-};
+export namespace Provider {
+  export type Create = Pick<Provider, 'name' | 'email' | 'phone'>;
+  export type Update = Pick<Provider, 'id' | 'name' | 'email' | 'phone'>;
+  export type Filters = Pick<Provider, 'email' | 'phone'> & {
+    name?: string;
+  };
+}

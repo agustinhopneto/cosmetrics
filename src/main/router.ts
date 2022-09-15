@@ -25,4 +25,8 @@ export namespace Routes {
     Update = '/providers/update',
     Delete = '/providers/delete',
   }
+
+  export enum Categories {
+    Create = '/categories/create',
+  }
 }

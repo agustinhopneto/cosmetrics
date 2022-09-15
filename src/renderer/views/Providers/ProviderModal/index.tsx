@@ -19,6 +19,7 @@ type ProviderModalProps = {
   provider?: CreateProviderParams | UpdateProviderParams;
   isEditing?: boolean;
 };
+
 export function ProviderModal({
   opened = false,
   setOpened,

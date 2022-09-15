@@ -1,16 +1,11 @@
 import dayjs from 'dayjs';
 import { clearFilters } from '../utils/clearFilters';
-import {
-  CreateProviderDTO,
-  FilterProvidersDTO,
-  Provider,
-  UpdateProviderDTO,
-} from '../dtos/provider';
+import { Provider } from '../dtos/provider';
 import { knex } from '../database/connection';
 import { Paginated } from '../dtos';
 
 export const createProvider = async (
-  provider: CreateProviderDTO
+  provider: Provider.Create
 ): Promise<Provider> => {
   const [providerExists] = await knex<Provider>('providers')
     .select('*')
@@ -36,7 +31,7 @@ export const createProvider = async (
 export const listProviders = async (
   page: number,
   limit: number,
-  filters?: FilterProvidersDTO
+  filters?: Provider.Filters
 ): Promise<Paginated<Provider>> => {
   const query = knex<Provider>('providers');
 
@@ -73,7 +68,7 @@ export const listProviders = async (
   };
 };
 
-export const updateProvider = async (provider: UpdateProviderDTO) => {
+export const updateProvider = async (provider: Provider.Update) => {
   const [providerExists] = await knex<Provider>('providers')
     .select('*')
     .whereRaw('UPPER(name) = ?', [provider.name.toUpperCase()])

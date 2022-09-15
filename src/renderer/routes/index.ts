@@ -6,8 +6,8 @@ import {
   RiTruckFill,
 } from 'react-icons/ri';
 import _ from 'lodash';
-import { IngredientsCategories } from '../views/IngredientsCategories';
-import { IngredientsProperties } from '../views/IngredientsProperties';
+import { IngredientsCategories } from '../views/Categories';
+import { IngredientsProperties } from '../views/Properties';
 import { Ingredients } from '../views/Ingredients';
 import { Providers } from '../views/Providers';
 
@@ -21,9 +21,15 @@ export type Route = {
 
 export const routes: Route[] = [
   {
+    name: 'Fornecedores',
+    icon: React.createElement(RiTruckFill),
+    path: '/',
+    view: React.createElement(Providers),
+  },
+  {
     name: 'Ingredientes',
     icon: React.createElement(RiFlaskFill),
-    path: '/',
+    path: '/ingredients',
     view: React.createElement(Ingredients),
     children: [
       {
@@ -39,12 +45,6 @@ export const routes: Route[] = [
         view: React.createElement(IngredientsProperties),
       },
     ],
-  },
-  {
-    name: 'Fornecedores',
-    icon: React.createElement(RiTruckFill),
-    path: '/providers',
-    view: React.createElement(Providers),
   },
 ];
 
