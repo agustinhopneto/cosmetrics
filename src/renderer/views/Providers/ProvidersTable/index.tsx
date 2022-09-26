@@ -1,7 +1,7 @@
-import { ActionIcon, Paper, ScrollArea, Group, Table } from '@mantine/core';
+import { ActionIcon, Paper, ScrollArea, Table, Menu } from '@mantine/core';
 import dayjs from 'dayjs';
 import { useEffect, useState, useCallback } from 'react';
-import { RiEdit2Fill, RiEyeFill } from 'react-icons/ri';
+import { RiEdit2Fill, RiEyeFill, RiMoreFill } from 'react-icons/ri';
 import { Provider, useProviders } from '../../../hooks/providers';
 import { Pagination } from '../../../components/Pagination';
 import { ProviderModal } from '../ProviderModal';
@@ -47,19 +47,29 @@ export function ProvidersTable() {
                     <td>{provider.phone || '-------'}</td>
                     <td>{dayjs(provider.created_at).format('DD/MM/YYYY')}</td>
                     <td>
-                      <Group spacing={0}>
-                        <ActionIcon color="pink" variant="subtle">
-                          <RiEyeFill />
-                        </ActionIcon>
-                        <ActionIcon
-                          onClick={() => handleEditProvider(provider)}
-                          ml="sm"
-                          color="cyan"
-                          variant="subtle"
-                        >
-                          <RiEdit2Fill />
-                        </ActionIcon>
-                      </Group>
+                      <Menu shadow="lg" width={200} withArrow withinPortal>
+                        <Menu.Target>
+                          <ActionIcon variant="light">
+                            <RiMoreFill />
+                          </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                          <Menu.Label>Ações</Menu.Label>
+                          <Menu.Item
+                            color="pink"
+                            icon={<RiEyeFill size={14} />}
+                          >
+                            Visualizar
+                          </Menu.Item>
+                          <Menu.Item
+                            color="cyan"
+                            icon={<RiEdit2Fill size={14} />}
+                            onClick={() => handleEditProvider(provider)}
+                          >
+                            Editar
+                          </Menu.Item>
+                        </Menu.Dropdown>
+                      </Menu>
                     </td>
                   </tr>
                 ))}
