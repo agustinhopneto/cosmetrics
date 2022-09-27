@@ -17,6 +17,7 @@ declare global {
       };
       categories: {
         create: (category: Category.Create) => Promise<Category>;
+        list: (filters?: Category.Filters) => Promise<Category[]>;
       };
     };
   }

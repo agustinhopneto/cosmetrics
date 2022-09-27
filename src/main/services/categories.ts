@@ -22,3 +22,17 @@ export const createCategory = async (category: Category.Create) => {
 
   return insertedCategory;
 };
+
+export const listProviders = async (
+  filters?: Category.Filters
+): Promise<Category[]> => {
+  const query = knex<Category>('categories');
+
+  if (filters) {
+    query.whereLike('name', `%${filters.name}%`);
+  }
+
+  const result = await query.select('*').orderBy('id', 'desc');
+
+  return result;
+};

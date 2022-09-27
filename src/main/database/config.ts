@@ -27,3 +27,8 @@ export const knexConfig: Knex.Config = {
   },
   useNullAsDefault: true,
 };
+
+export const seedConfig = {
+  providersAmount: 50,
+  categoriesAmount: 12,
+};
