@@ -20,10 +20,16 @@ export type CreateCategoryParams = Pick<
   'name' | 'color' | 'description'
 >;
 
+export type UpdateCategoryParams = Pick<
+  Category,
+  'id' | 'name' | 'color' | 'description'
+>;
+
 type CategoriesProps = {
   categories: Category[];
   createCategory: (category: CreateCategoryParams) => Promise<void>;
   listCategories: () => Promise<void>;
+  updateCategory: (category: UpdateCategoryParams) => Promise<void>;
   isLoading: boolean;
   filters?: CategoryFilters;
   setFilters: (filters?: CategoryFilters) => void;
@@ -79,11 +85,43 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     setIsLoading(false);
   }, [filters]);
 
+  const updateCategory = useCallback(
+    async (category: UpdateCategoryParams) => {
+      try {
+        setIsLoading(true);
+        const updatedCategory = await api.update(category);
+
+        const newCategories = categories;
+
+        const categoryIndex = newCategories.findIndex(
+          (item) => item.id === category.id
+        );
+
+        newCategories[categoryIndex] = updatedCategory;
+
+        setCategories(newCategories);
+        notify({
+          message: 'A categoria foi atualizada!',
+          type: 'success',
+        });
+      } catch (err: any) {
+        notify({
+          message: getErrMessage(err),
+          type: 'danger',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [notify, categories]
+  );
+
   return (
     <CategoriesContext.Provider
       value={{
         createCategory,
         listCategories,
+        updateCategory,
         categories,
         setFilters,
         filters,

@@ -1,5 +1,5 @@
-import { Paginated } from 'main/dtos';
-import { Category } from 'main/dtos/category';
+import { Paginated } from '../main/dtos';
+import { Category } from '../main/dtos/category';
 import { Provider } from '../main/dtos/provider';
 
 declare global {
@@ -18,6 +18,7 @@ declare global {
       categories: {
         create: (category: Category.Create) => Promise<Category>;
         list: (filters?: Category.Filters) => Promise<Category[]>;
+        update: (category: Category.Update) => Promise<Category>;
       };
     };
   }
