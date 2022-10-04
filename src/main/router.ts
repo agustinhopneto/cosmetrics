@@ -1,5 +1,5 @@
-import { readdirSync } from 'fs';
-import { join } from 'path';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 export const getApiRoutes = async () => {
   const files = readdirSync(join(__dirname, './routes')).filter(
@@ -29,5 +29,6 @@ export namespace Routes {
   export enum Categories {
     Create = '/categories/create',
     List = '/categories/list',
+    Update = '/categories/update',
   }
 }
