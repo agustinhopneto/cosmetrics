@@ -18,5 +18,7 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.invoke(Routes.Categories.Create, category),
     list: (filters?: Category.Filters) =>
       ipcRenderer.invoke(Routes.Categories.List, filters),
+    update: (category: Category.Update) =>
+      ipcRenderer.invoke(Routes.Categories.Update, category),
   },
 });

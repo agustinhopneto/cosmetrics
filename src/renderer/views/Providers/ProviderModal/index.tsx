@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useCallback, useEffect, useState } from 'react';
-import { RiAddLine } from 'react-icons/ri';
+import { RiAddLine, RiEdit2Line } from 'react-icons/ri';
 import {
   CreateProviderParams,
   UpdateProviderParams,
@@ -107,7 +107,10 @@ export function ProviderModal({
           />
         </Stack>
         <Box mt="xl" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button leftIcon={<RiAddLine />} type="submit">
+          <Button
+            leftIcon={isEditing ? <RiEdit2Line /> : <RiAddLine />}
+            type="submit"
+          >
             {isEditing ? 'Atualizar' : 'Cadastrar'}
           </Button>
         </Box>
